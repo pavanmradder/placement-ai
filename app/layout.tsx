@@ -26,6 +26,8 @@ export const metadata: Metadata = {
   ],
 };
 
+import AuthProvider from "@/components/providers/AuthProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,9 +39,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} scroll-smooth dark`}
     >
       <body className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-indigo-500/30 selection:text-indigo-200">
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );
 }
+
 

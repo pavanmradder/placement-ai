@@ -47,13 +47,13 @@ export default function Hero() {
 
           {/* Action Buttons */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="#dashboard-preview"
+            <Link
+              href="/signup"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 text-base font-semibold text-white rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 shadow-xl shadow-indigo-600/25 hover:shadow-indigo-600/40 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
             >
               <span>Get Started</span>
               <ArrowRight className="w-5 h-5" />
-            </a>
+            </Link>
 
             <a
               href="#features"
