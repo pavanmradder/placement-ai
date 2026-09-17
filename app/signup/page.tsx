@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
+import { registerStudentAction } from "@/app/actions/auth";
+import {
+  STUDENT_DOMAIN_ERROR,
+  isStudentEmail,
+} from "@/lib/auth-constants";
 import {
   Bot,
   ArrowLeft,
@@ -16,6 +20,7 @@ import {
   EyeOff,
   AlertCircle,
   CheckCircle2,
+  GraduationCap,
 } from "lucide-react";
 
 export default function SignupPage() {
@@ -47,7 +52,14 @@ export default function SignupPage() {
     e.preventDefault();
     setError(null);
 
-    // Client-side validations
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // 1. Client-side domain check (instant UX feedback)
+    if (!isStudentEmail(normalizedEmail)) {
+      setError(STUDENT_DOMAIN_ERROR);
+      return;
+    }
+
     if (password.length < 6) {
       setError("Password must be at least 6 characters long.");
       return;
@@ -61,43 +73,35 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const supabase = createClient();
-      const { data, error: signUpError } = await supabase.auth.signUp({
-        email: email.trim(),
+      // 2. Server-side registration action (enforces @mite.ac.in domain on the server)
+      const res = await registerStudentAction({
+        name: name.trim(),
+        email: normalizedEmail,
         password,
-        options: {
-          data: {
-            name: name.trim(),
-            full_name: name.trim(),
-            target_role: targetRole,
-            targetRole: targetRole,
-          },
-        },
+        targetRole,
       });
 
-      if (signUpError) {
-        setError(signUpError.message || "Failed to create account. Please try again.");
+      if (!res.success) {
+        setError(res.error || "Failed to create account. Please try again.");
         setLoading(false);
         return;
       }
 
       setSuccess(true);
 
-      if (data?.session) {
-        // Immediate session granted (email confirmation disabled in Supabase)
+      if (res.hasSession) {
         setSuccessMessage("Account created successfully! Redirecting to your dashboard...");
         setTimeout(() => {
           router.push("/dashboard");
           router.refresh();
         }, 1000);
       } else {
-        // Email confirmation is required by Supabase project settings
         setSuccessMessage(
-          "Account created! If confirmation is required, please check your email inbox to verify your account, or proceed to sign in."
+          "Account created! Please check your MITE college email inbox to verify your account, then sign in."
         );
         setTimeout(() => {
           router.push("/login");
-        }, 2500);
+        }, 3000);
       }
     } catch (err: unknown) {
       const message =
@@ -143,6 +147,14 @@ export default function SignupPage() {
           <p className="mt-2 text-sm text-slate-400">
             Start building your placement readiness score today.
           </p>
+
+          {/* Explicit MITE College Restriction Notice */}
+          <div className="mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/25 text-xs text-cyan-300">
+            <GraduationCap className="w-4 h-4 text-cyan-400 shrink-0" />
+            <span className="font-medium">
+              Use your official MITE college email (@mite.ac.in)
+            </span>
+          </div>
         </div>
 
         {/* Signup Card */}
@@ -182,11 +194,14 @@ export default function SignupPage() {
               </div>
             </div>
 
-            {/* Email Address */}
+            {/* Email Address (MITE domain only) */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider">
-                Email Address
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                  MITE College Email
+                </label>
+                <span className="text-[11px] text-cyan-400 font-medium">@mite.ac.in only</span>
+              </div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
                   <Mail className="w-4 h-4" />
@@ -196,10 +211,13 @@ export default function SignupPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@college.edu or gmail.com"
+                  placeholder="student.id@mite.ac.in"
                   className="w-full pl-10 pr-4 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors"
                 />
               </div>
+              <p className="mt-1 text-[11px] text-slate-400">
+                Use your official MITE college email (@mite.ac.in)
+              </p>
             </div>
 
             {/* Target Role Selector */}
@@ -293,14 +311,24 @@ export default function SignupPage() {
           </form>
 
           {/* Footer inside card */}
-          <div className="mt-6 pt-5 border-t border-white/[0.08] text-center text-xs text-slate-400">
-            <span>Already have an account? </span>
-            <Link
-              href="/login"
-              className="font-semibold text-cyan-400 hover:text-cyan-300 transition-colors ml-1"
-            >
-              Sign in here
-            </Link>
+          <div className="mt-6 pt-5 border-t border-white/[0.08] text-center text-xs text-slate-400 flex flex-col gap-2">
+            <div>
+              <span>Already have an account? </span>
+              <Link
+                href="/login"
+                className="font-semibold text-cyan-400 hover:text-cyan-300 transition-colors ml-1"
+              >
+                Sign in here
+              </Link>
+            </div>
+            <div>
+              <Link
+                href="/admin/login"
+                className="text-slate-500 hover:text-slate-300 transition-colors text-[11px]"
+              >
+                Placement Administrator Portal →
+              </Link>
+            </div>
           </div>
         </div>
       </div>

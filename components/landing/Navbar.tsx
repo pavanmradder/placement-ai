@@ -18,18 +18,25 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const displayName =
-    user?.user_metadata?.name ||
-    user?.user_metadata?.full_name ||
-    user?.email?.split("@")[0] ||
-    "Student";
-  const avatarInitial = displayName.charAt(0).toUpperCase();
+  const userEmail = user?.email?.trim().toLowerCase() || "";
+  const isAdmin = userEmail === "pavanmradder@gmail.com";
+
+  const displayName = isAdmin
+    ? "Admin (Pavan)"
+    : user?.user_metadata?.name ||
+      user?.user_metadata?.full_name ||
+      user?.email?.split("@")[0] ||
+      "Student";
+  const avatarInitial = isAdmin ? "P" : displayName.charAt(0).toUpperCase();
 
   const navLinks = [
     { name: "Features", href: "/#features" },
     { name: "How It Works", href: "/#how-it-works" },
     { name: "About", href: "/#about" },
   ];
+
+  const dashboardHref = isAdmin ? "/admin" : "/dashboard";
+  const dashboardLabel = isAdmin ? "Admin Console" : "Dashboard";
 
   return (
     <header
@@ -74,11 +81,13 @@ export default function Navbar() {
             ))}
             {user && (
               <Link
-                href="/dashboard"
-                className="text-cyan-300 hover:text-white transition-colors duration-150 relative py-1 flex items-center gap-1.5 font-semibold"
+                href={dashboardHref}
+                className={`${
+                  isAdmin ? "text-amber-300 hover:text-amber-200" : "text-cyan-300 hover:text-white"
+                } transition-colors duration-150 relative py-1 flex items-center gap-1.5 font-semibold`}
               >
-                <LayoutDashboard className="w-4 h-4 text-cyan-400" />
-                <span>Dashboard</span>
+                <LayoutDashboard className={`w-4 h-4 ${isAdmin ? "text-amber-400" : "text-cyan-400"}`} />
+                <span>{dashboardLabel}</span>
               </Link>
             )}
           </nav>
@@ -88,14 +97,24 @@ export default function Navbar() {
             {user ? (
               <div className="flex items-center gap-3">
                 <Link
-                  href="/dashboard"
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-slate-200 hover:bg-white/[0.08] hover:border-cyan-500/30 transition-all group"
-                  title="Go to Dashboard"
+                  href={dashboardHref}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-xl ${
+                    isAdmin
+                      ? "bg-amber-500/10 border border-amber-500/25 hover:bg-amber-500/20"
+                      : "bg-white/[0.04] border border-white/10 hover:bg-white/[0.08] hover:border-cyan-500/30"
+                  } text-xs text-slate-200 transition-all group`}
+                  title={`Go to ${dashboardLabel}`}
                 >
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center text-[10px] font-bold text-white shadow-inner">
+                  <div className={`w-6 h-6 rounded-full ${
+                    isAdmin
+                      ? "bg-gradient-to-tr from-amber-500 to-orange-500"
+                      : "bg-gradient-to-tr from-indigo-500 to-cyan-400"
+                  } flex items-center justify-center text-[10px] font-bold text-white shadow-inner`}>
                     {avatarInitial}
                   </div>
-                  <span className="font-medium max-w-[130px] truncate group-hover:text-cyan-300 transition-colors">
+                  <span className={`font-medium max-w-[130px] truncate ${
+                    isAdmin ? "text-amber-300" : "group-hover:text-cyan-300"
+                  } transition-colors`}>
                     {displayName}
                   </span>
                 </Link>
@@ -156,12 +175,14 @@ export default function Navbar() {
             ))}
             {user && (
               <Link
-                href="/dashboard"
+                href={dashboardHref}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-base font-medium text-cyan-300 hover:text-cyan-200 py-2 border-b border-white/5 flex items-center gap-2"
+                className={`text-base font-medium ${
+                  isAdmin ? "text-amber-300 hover:text-amber-200" : "text-cyan-300 hover:text-cyan-200"
+                } py-2 border-b border-white/5 flex items-center gap-2`}
               >
-                <LayoutDashboard className="w-4 h-4 text-cyan-400" />
-                <span>Dashboard</span>
+                <LayoutDashboard className={`w-4 h-4 ${isAdmin ? "text-amber-400" : "text-cyan-400"}`} />
+                <span>{dashboardLabel}</span>
               </Link>
             )}
             <div className="flex flex-col gap-3 pt-3">
