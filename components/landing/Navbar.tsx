@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
-import { Menu, X, ArrowRight, Bot, LogOut, User as UserIcon } from "lucide-react";
+import { useAuth } from "@/components/providers/AuthProvider";
+import { Menu, X, ArrowRight, Bot, LogOut, User as UserIcon, LayoutDashboard } from "lucide-react";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { data: session } = useSession();
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,10 +18,17 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const displayName =
+    user?.user_metadata?.name ||
+    user?.user_metadata?.full_name ||
+    user?.email?.split("@")[0] ||
+    "Student";
+  const avatarInitial = displayName.charAt(0).toUpperCase();
+
   const navLinks = [
-    { name: "Features", href: "#features" },
-    { name: "How It Works", href: "#how-it-works" },
-    { name: "About", href: "#about" },
+    { name: "Features", href: "/#features" },
+    { name: "How It Works", href: "/#how-it-works" },
+    { name: "About", href: "/#about" },
   ];
 
   return (
@@ -65,21 +72,36 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
+            {user && (
+              <Link
+                href="/dashboard"
+                className="text-cyan-300 hover:text-white transition-colors duration-150 relative py-1 flex items-center gap-1.5 font-semibold"
+              >
+                <LayoutDashboard className="w-4 h-4 text-cyan-400" />
+                <span>Dashboard</span>
+              </Link>
+            )}
           </nav>
 
           {/* Desktop Auth / Action Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            {session?.user ? (
+            {user ? (
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-slate-200">
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-slate-200 hover:bg-white/[0.08] hover:border-cyan-500/30 transition-all group"
+                  title="Go to Dashboard"
+                >
                   <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center text-[10px] font-bold text-white shadow-inner">
-                    {session.user.name ? session.user.name.charAt(0).toUpperCase() : "U"}
+                    {avatarInitial}
                   </div>
-                  <span className="font-medium">{session.user.name || session.user.email}</span>
-                </div>
+                  <span className="font-medium max-w-[130px] truncate group-hover:text-cyan-300 transition-colors">
+                    {displayName}
+                  </span>
+                </Link>
                 <button
                   type="button"
-                  onClick={() => signOut({ callbackUrl: "/" })}
+                  onClick={() => signOut("/")}
                   className="flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-rose-300 px-3 py-2 rounded-lg hover:bg-white/[0.05] transition-all cursor-pointer"
                   title="Sign out"
                 >
@@ -132,20 +154,30 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
+            {user && (
+              <Link
+                href="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-base font-medium text-cyan-300 hover:text-cyan-200 py-2 border-b border-white/5 flex items-center gap-2"
+              >
+                <LayoutDashboard className="w-4 h-4 text-cyan-400" />
+                <span>Dashboard</span>
+              </Link>
+            )}
             <div className="flex flex-col gap-3 pt-3">
-              {session?.user ? (
+              {user ? (
                 <>
                   <div className="flex items-center gap-2.5 py-2 text-sm text-slate-200">
                     <UserIcon className="w-4 h-4 text-cyan-400" />
-                    <span>Signed in as <strong>{session.user.name || session.user.email}</strong></span>
+                    <span>Signed in as <strong>{displayName}</strong></span>
                   </div>
                   <button
                     type="button"
                     onClick={() => {
                       setMobileMenuOpen(false);
-                      signOut({ callbackUrl: "/" });
+                      signOut("/");
                     }}
-                    className="w-full flex items-center justify-center gap-2 text-sm font-medium text-rose-300 hover:text-rose-200 py-2.5 border border-rose-500/20 bg-rose-500/10 rounded-xl"
+                    className="w-full flex items-center justify-center gap-2 text-sm font-medium text-rose-300 hover:text-rose-200 py-2.5 border border-rose-500/20 bg-rose-500/10 rounded-xl cursor-pointer"
                   >
                     <LogOut className="w-4 h-4" />
                     <span>Sign Out</span>

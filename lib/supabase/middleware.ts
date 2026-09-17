@@ -11,7 +11,9 @@ export async function updateSession(request: NextRequest) {
   });
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  const supabaseKey =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
     return supabaseResponse;
@@ -36,8 +38,25 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  // Refresh auth session token if present
-  await supabase.auth.getUser();
+  // IMPORTANT: Avoid writing any logic between createServerClient and
+  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
+  // issues with users being randomly logged out.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Protect /dashboard and nested routes: redirect unauthenticated users to /login
+  if (!user && request.nextUrl.pathname.startsWith("/dashboard")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    url.searchParams.set("callbackUrl", request.nextUrl.pathname);
+    const redirectResponse = NextResponse.redirect(url);
+    // Ensure refreshed session cookies are transferred to redirect response
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
+    });
+    return redirectResponse;
+  }
 
   return supabaseResponse;
 }

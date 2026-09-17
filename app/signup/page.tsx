@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 import {
   Bot,
   ArrowLeft,
@@ -31,6 +31,7 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const targetRoleOptions = [
     "Software Development Engineer (SDE)",
@@ -60,45 +61,48 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      // 1. Call registration endpoint
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name.trim(),
-          email: email.trim(),
-          password,
-          targetRole,
-        }),
+      const supabase = createClient();
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: email.trim(),
+        password,
+        options: {
+          data: {
+            name: name.trim(),
+            full_name: name.trim(),
+            target_role: targetRole,
+            targetRole: targetRole,
+          },
+        },
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || "Failed to create account. Please try again.");
+      if (signUpError) {
+        setError(signUpError.message || "Failed to create account. Please try again.");
         setLoading(false);
         return;
       }
 
-      // 2. Automatically sign in with the new credentials
-      const signInRes = await signIn("credentials", {
-        email: email.trim(),
-        password,
-        redirect: false,
-      });
+      setSuccess(true);
 
-      if (signInRes?.error) {
-        setError("Account created, but automatic login failed. Please sign in manually.");
-        setLoading(false);
-      } else {
-        setSuccess(true);
+      if (data?.session) {
+        // Immediate session granted (email confirmation disabled in Supabase)
+        setSuccessMessage("Account created successfully! Redirecting to your dashboard...");
         setTimeout(() => {
-          router.push("/");
+          router.push("/dashboard");
           router.refresh();
         }, 1000);
+      } else {
+        // Email confirmation is required by Supabase project settings
+        setSuccessMessage(
+          "Account created! If confirmation is required, please check your email inbox to verify your account, or proceed to sign in."
+        );
+        setTimeout(() => {
+          router.push("/login");
+        }, 2500);
       }
-    } catch {
-      setError("An unexpected error occurred during registration. Please try again.");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "An unexpected registration error occurred.";
+      setError(message);
       setLoading(false);
     }
   };
@@ -153,7 +157,7 @@ export default function SignupPage() {
           {success && (
             <div className="mb-6 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2.5 text-xs text-emerald-300">
               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>Account created successfully! Preparing your dashboard...</span>
+              <span>{successMessage}</span>
             </div>
           )}
 
@@ -299,7 +303,6 @@ export default function SignupPage() {
             </Link>
           </div>
         </div>
-
       </div>
     </div>
   );

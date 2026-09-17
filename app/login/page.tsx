@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 import { Bot, ArrowLeft, ArrowRight, Lock, Mail, Eye, EyeOff, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,25 +24,27 @@ function LoginForm() {
     setLoading(true);
 
     try {
-      const res = await signIn("credentials", {
+      const supabase = createClient();
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,
-        redirect: false,
-        callbackUrl,
       });
 
-      if (res?.error) {
-        setError(res.error || "Invalid email or password. Please try again.");
+      if (signInError) {
+        setError(signInError.message || "Invalid email or password. Please try again.");
         setLoading(false);
       } else {
         setSuccess(true);
+        const destination = callbackUrl === "/" ? "/dashboard" : callbackUrl;
         setTimeout(() => {
-          router.push(callbackUrl);
+          router.push(destination);
           router.refresh();
         }, 800);
       }
-    } catch {
-      setError("An unexpected error occurred during sign in. Please try again.");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "An unexpected error occurred during sign in.";
+      setError(message);
       setLoading(false);
     }
   };
@@ -79,7 +81,7 @@ function LoginForm() {
         {success && (
           <div className="mb-6 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2.5 text-xs text-emerald-300">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>Authentication successful! Redirecting...</span>
+            <span>Authentication successful! Redirecting to dashboard...</span>
           </div>
         )}
 
