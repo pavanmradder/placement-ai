@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import {
   TrendingUp,
@@ -329,9 +330,12 @@ export default async function DashboardPage() {
               <span className="truncate">
                 {latestResume?.file_name || "No resume uploaded"}
               </span>
-              <span className="text-emerald-400 font-medium shrink-0 ml-1">
-                {userResumes.length > 0 ? `${userResumes.length} File(s)` : "Pending"}
-              </span>
+              <Link
+                href="/resume-analyzer"
+                className="text-cyan-400 hover:text-cyan-300 font-medium shrink-0 ml-1 underline underline-offset-2 hover:no-underline"
+              >
+                {userResumes.length > 0 ? `${userResumes.length} File(s)` : "Upload"}
+              </Link>
             </div>
           </div>
 
@@ -413,9 +417,12 @@ export default async function DashboardPage() {
               <span>
                 {avgMockScore ? `Avg: ${avgMockScore}/10` : "No mocks taken"}
               </span>
-              <span className="text-cyan-300 font-medium">
-                {hasMocks ? `${userMocks[0]?.interview_type || "Technical"}` : "Pending"}
-              </span>
+              <Link
+                href="/mock-interview"
+                className="text-cyan-400 hover:text-cyan-300 font-medium underline underline-offset-2 hover:no-underline"
+              >
+                {hasMocks ? `${userMocks[0]?.interview_type || "Technical"}` : "Start Mock"}
+              </Link>
             </div>
           </div>
         </div>
@@ -441,13 +448,13 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <button
-            type="button"
+          <Link
+            href="/mock-interview"
             className="self-start sm:self-auto shrink-0 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-indigo-600/20 cursor-pointer transition-all hover:-translate-y-0.5"
           >
             <Zap className="w-3.5 h-3.5" />
             <span>Start Practice Drill</span>
-          </button>
+          </Link>
         </div>
 
         {/* Action Modules */}
@@ -458,7 +465,10 @@ export default async function DashboardPage() {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-5 rounded-2xl bg-[#0c1222]/80 border border-white/10 hover:border-cyan-500/30 transition-all group flex flex-col justify-between">
+            <Link
+              href="/mock-interview"
+              className="p-5 rounded-2xl bg-[#0c1222]/80 border border-white/10 hover:border-cyan-500/40 hover:bg-[#0e162c] transition-all group flex flex-col justify-between cursor-pointer"
+            >
               <div>
                 <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-3 group-hover:scale-105 transition-transform">
                   <Video className="w-5 h-5" />
@@ -474,25 +484,55 @@ export default async function DashboardPage() {
                 <span>Start Mock Round</span>
                 <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </div>
-            </div>
+            </Link>
 
-            <div className="p-5 rounded-2xl bg-[#0c1222]/80 border border-white/10 hover:border-indigo-500/30 transition-all group flex flex-col justify-between">
+            <Link
+              href="/resume-analyzer"
+              className="p-5 rounded-2xl bg-[#0c1222]/80 border border-white/10 hover:border-indigo-500/40 hover:bg-[#0e162c] transition-all group flex flex-col justify-between cursor-pointer"
+            >
               <div>
                 <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-3 group-hover:scale-105 transition-transform">
                   <FileCheck2 className="w-5 h-5" />
                 </div>
-                <h3 className="text-sm font-semibold text-white group-hover:text-indigo-300 transition-colors">
-                  ATS Resume Scanner
+                <h3 className="text-sm font-semibold text-white group-hover:text-indigo-300 transition-colors flex items-center justify-between">
+                  <span>ATS Resume Scanner</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300">
+                    Step 1 Active
+                  </span>
                 </h3>
                 <p className="text-xs text-slate-400 mt-1">
-                  Upload your resume against tier-1 job descriptions for keyword gap analysis and metrics.
+                  Upload your master PDF resume into secure private storage with RLS encryption.
                 </p>
               </div>
               <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-indigo-300 font-medium">
-                <span>Analyze Resume</span>
+                <span>Upload & Manage Resume</span>
                 <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </div>
-            </div>
+            </Link>
+
+            <Link
+              href="/skill-gap"
+              className="p-5 rounded-2xl bg-[#0c1222]/80 border border-white/10 hover:border-indigo-500/40 hover:bg-[#0e162c] transition-all group flex flex-col justify-between cursor-pointer"
+            >
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-3 group-hover:scale-105 transition-transform">
+                  <Target className="w-5 h-5" />
+                </div>
+                <h3 className="text-sm font-semibold text-white group-hover:text-indigo-300 transition-colors flex items-center justify-between">
+                  <span>Skill Gap Analysis</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300">
+                    Step 4 Live
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-400 mt-1">
+                  Benchmark your skills against Tier-1 campus drive requirements and get prioritized study plans.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-indigo-300 font-medium">
+                <span>View Skill Match</span>
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            </Link>
 
             <div className="p-5 rounded-2xl bg-[#0c1222]/80 border border-white/10 hover:border-purple-500/30 transition-all group flex flex-col justify-between">
               <div>

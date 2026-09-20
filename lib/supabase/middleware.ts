@@ -78,8 +78,13 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
-  // 2. Protect /dashboard (student dashboard)
-  if (request.nextUrl.pathname.startsWith("/dashboard")) {
+  // 2. Protect /dashboard, /resume-analyzer, /mock-interview, and /skill-gap (student portal)
+  if (
+    request.nextUrl.pathname.startsWith("/dashboard") ||
+    request.nextUrl.pathname.startsWith("/resume-analyzer") ||
+    request.nextUrl.pathname.startsWith("/mock-interview") ||
+    request.nextUrl.pathname.startsWith("/skill-gap")
+  ) {
     if (!user) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
