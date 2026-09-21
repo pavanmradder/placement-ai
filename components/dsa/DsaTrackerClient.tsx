@@ -58,17 +58,31 @@ export interface DsaSummaryStats {
 interface DsaTrackerClientProps {
   userId: string;
   targetRole?: string;
+  initialProblems?: DsaProblem[];
+  initialProgress?: UserProgressRecord[];
+  initialStats?: DsaSummaryStats | null;
 }
 
 export default function DsaTrackerClient({
   userId,
   targetRole = "Software Development Engineer (SDE)",
+  initialProblems,
+  initialProgress,
+  initialStats,
 }: DsaTrackerClientProps) {
-  const [problems, setProblems] = useState<DsaProblem[]>([]);
-  const [progressMap, setProgressMap] = useState<Record<string, UserProgressRecord>>({});
-  const [stats, setStats] = useState<DsaSummaryStats | null>(null);
+  const [problems, setProblems] = useState<DsaProblem[]>(initialProblems || []);
+  const [progressMap, setProgressMap] = useState<Record<string, UserProgressRecord>>(() => {
+    const map: Record<string, UserProgressRecord> = {};
+    if (Array.isArray(initialProgress)) {
+      for (const item of initialProgress) {
+        map[item.problem_id] = item;
+      }
+    }
+    return map;
+  });
+  const [stats, setStats] = useState<DsaSummaryStats | null>(initialStats || null);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!initialProblems);
   const [error, setError] = useState<string | null>(null);
 
   // Filters
@@ -85,7 +99,7 @@ export default function DsaTrackerClient({
   const [editingNotesId, setEditingNotesId] = useState<string | null>(null);
   const [noteDraft, setNoteDraft] = useState<string>("");
 
-  // Fetch problems and progress concurrently
+  // Fetch problems and progress concurrently (fallback / manual refresh)
   const loadData = async () => {
     setIsLoading(true);
     setError(null);
@@ -129,8 +143,10 @@ export default function DsaTrackerClient({
   };
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (!initialProblems) {
+      loadData();
+    }
+  }, [initialProblems]);
 
   // Dismiss toast after 3 seconds
   useEffect(() => {

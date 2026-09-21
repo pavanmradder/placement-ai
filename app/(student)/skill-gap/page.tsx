@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import SkillGapClient, { SkillGapRecord } from "@/components/skill-gap/SkillGapClient";
 
 export const metadata = {
@@ -34,11 +33,11 @@ export default async function SkillGapPage() {
     redirect("/login?error=domain");
   }
 
-  // Concurrently fetch profile and existing latest skill gap analysis
+  // Concurrently fetch target role and existing latest skill gap analysis
   const [{ data: profile }, { data: latestAnalysis }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("full_name, target_role, college, graduation_year")
+      .select("target_role")
       .eq("id", user.id)
       .maybeSingle(),
     supabase
@@ -50,13 +49,6 @@ export default async function SkillGapPage() {
       .maybeSingle(),
   ]);
 
-  const displayName =
-    profile?.full_name ||
-    user.user_metadata?.name ||
-    user.user_metadata?.full_name ||
-    user.email?.split("@")[0] ||
-    "Student";
-
   const targetRole =
     profile?.target_role ||
     user.user_metadata?.target_role ||
@@ -64,20 +56,12 @@ export default async function SkillGapPage() {
     "Software Development Engineer (SDE)";
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-indigo-500/30 selection:text-indigo-200">
-      <DashboardHeader
-        displayName={displayName}
-        email={user.email || ""}
-        targetRole={targetRole}
+    <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <SkillGapClient
+        userId={user.id}
+        initialRole={targetRole}
+        initialAnalysis={(latestAnalysis as unknown as SkillGapRecord) || null}
       />
-
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-        <SkillGapClient
-          userId={user.id}
-          initialRole={targetRole}
-          initialAnalysis={(latestAnalysis as unknown as SkillGapRecord) || null}
-        />
-      </main>
-    </div>
+    </main>
   );
 }

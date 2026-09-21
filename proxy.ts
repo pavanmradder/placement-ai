@@ -17,8 +17,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - images & public assets (svg, png, jpg, jpeg, gif, webp)
+     * - static file extensions (svg, png, jpg, jpeg, gif, webp, ico, woff, woff2, ttf, eot, mp4, webm, mp3, txt, xml)
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|eot|mp4|webm|mp3|txt|xml)$).*)",
   ],
 };

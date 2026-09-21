@@ -1,15 +1,13 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import DsaTrackerClient from "@/components/dsa/DsaTrackerClient";
+import { isAdminEmail } from "@/lib/auth-constants";
 
-export const metadata = {
-  title: "DSA Progress Tracker | PlacementAI",
-  description:
-    "Track your progress across curated Data Structures & Algorithms problems for campus recruitment coding rounds.",
-};
-
-export default async function DsaTrackerPage() {
+export default async function StudentLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const supabase = await createClient();
 
   const {
@@ -17,22 +15,27 @@ export default async function DsaTrackerPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login?callbackUrl=/dsa");
+    redirect("/login");
   }
 
   const userEmail = user.email?.trim().toLowerCase() || "";
-  const isAdmin = userEmail === "pavanmradder@gmail.com";
+  const isAdmin = isAdminEmail(userEmail);
   const isStudent = userEmail.endsWith("@mite.ac.in");
 
-  // Restrict to authorized students (@mite.ac.in) and admin
-  if (!isStudent && !isAdmin) {
+  // Admin users should be redirected to /admin
+  if (isAdmin) {
+    redirect("/admin");
+  }
+
+  // Restrict to @mite.ac.in students
+  if (!isStudent) {
     redirect("/login?error=domain");
   }
 
-  // Fetch student profile for header and role display
+  // Fetch student profile once for the shared header
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, target_role, college, graduation_year")
+    .select("full_name, target_role")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -50,16 +53,13 @@ export default async function DsaTrackerPage() {
     "Software Development Engineer (SDE)";
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-purple-500/30 selection:text-purple-200">
+    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-indigo-500/30 selection:text-indigo-200">
       <DashboardHeader
         displayName={displayName}
         email={user.email || ""}
         targetRole={targetRole}
       />
-
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-        <DsaTrackerClient userId={user.id} targetRole={targetRole} />
-      </main>
+      {children}
     </div>
   );
 }

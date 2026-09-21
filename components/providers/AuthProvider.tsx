@@ -50,14 +50,20 @@ export default function AuthProvider({
     // 2. Real-time auth state subscription
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, currentSession) => {
+    } = supabase.auth.onAuthStateChange((event, currentSession) => {
       if (isMounted) {
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
         setLoading(false);
-        startTransition(() => {
-          router.refresh();
-        });
+
+        // Only refresh server components on genuine sign-in / sign-out events.
+        // Avoid refreshing on INITIAL_SESSION or TOKEN_REFRESHED to eliminate
+        // duplicate server re-renders and redundant database queries on navigation.
+        if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
+          startTransition(() => {
+            router.refresh();
+          });
+        }
       }
     });
 

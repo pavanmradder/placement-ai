@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import RoadmapClient from "@/components/roadmap/RoadmapClient";
 
 export const metadata = {
@@ -34,19 +33,21 @@ export default async function RoadmapPage() {
     redirect("/login?error=domain");
   }
 
-  // Fetch student profile for header and role display
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name, target_role, college, graduation_year")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  const displayName =
-    profile?.full_name ||
-    user.user_metadata?.name ||
-    user.user_metadata?.full_name ||
-    user.email?.split("@")[0] ||
-    "Student";
+  // Concurrently fetch target role and latest roadmap
+  const [{ data: profile }, { data: latestRoadmap }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("target_role")
+      .eq("id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("placement_roadmaps")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+  ]);
 
   const targetRole =
     profile?.target_role ||
@@ -55,16 +56,11 @@ export default async function RoadmapPage() {
     "Software Development Engineer (SDE)";
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-indigo-500/30 selection:text-indigo-200">
-      <DashboardHeader
-        displayName={displayName}
-        email={user.email || ""}
-        targetRole={targetRole}
+    <div className="flex-1">
+      <RoadmapClient
+        initialTargetRole={targetRole}
+        initialRoadmap={latestRoadmap as any}
       />
-
-      <div className="flex-1">
-        <RoadmapClient initialTargetRole={targetRole} />
-      </div>
     </div>
   );
 }

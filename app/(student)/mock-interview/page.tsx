@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import MockInterviewClient from "@/components/interview/MockInterviewClient";
 import type { MockInterviewRecord } from "@/components/interview/MockInterviewClient";
 
@@ -35,11 +34,11 @@ export default async function MockInterviewPage() {
     redirect("/login?error=domain");
   }
 
-  // Concurrently fetch profile and mock interview records
+  // Concurrently fetch target role and mock interview records
   const [{ data: profile }, { data: mockInterviews }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("full_name, target_role, college, graduation_year")
+      .select("target_role")
       .eq("id", user.id)
       .maybeSingle(),
     supabase
@@ -51,13 +50,6 @@ export default async function MockInterviewPage() {
       .order("created_at", { ascending: false }),
   ]);
 
-  const displayName =
-    profile?.full_name ||
-    user.user_metadata?.name ||
-    user.user_metadata?.full_name ||
-    user.email?.split("@")[0] ||
-    "Student";
-
   const targetRole =
     profile?.target_role ||
     user.user_metadata?.target_role ||
@@ -65,20 +57,12 @@ export default async function MockInterviewPage() {
     "Software Development Engineer (SDE)";
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-indigo-500/30 selection:text-indigo-200">
-      <DashboardHeader
-        displayName={displayName}
-        email={user.email || ""}
-        targetRole={targetRole}
+    <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <MockInterviewClient
+        userId={user.id}
+        initialRole={targetRole}
+        initialInterviews={(mockInterviews as MockInterviewRecord[]) || []}
       />
-
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-        <MockInterviewClient
-          userId={user.id}
-          initialRole={targetRole}
-          initialInterviews={(mockInterviews as MockInterviewRecord[]) || []}
-        />
-      </main>
-    </div>
+    </main>
   );
 }

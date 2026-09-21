@@ -10,6 +10,51 @@ export async function updateSession(request: NextRequest) {
     request,
   });
 
+  const pathname = request.nextUrl.pathname;
+
+  const isAdminRoute =
+    pathname.startsWith("/admin") && !pathname.startsWith("/admin/login");
+
+  const isStudentRoute =
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/roadmap") ||
+    pathname.startsWith("/resume-analyzer") ||
+    pathname.startsWith("/mock-interview") ||
+    pathname.startsWith("/skill-gap") ||
+    pathname.startsWith("/dsa") ||
+    pathname.startsWith("/job-applications");
+
+  // Check if any Supabase auth cookies exist on the incoming request
+  const hasAuthCookie = request.cookies
+    .getAll()
+    .some(
+      (cookie) =>
+        cookie.name.startsWith("sb-") &&
+        (cookie.name.includes("-auth-token") || cookie.name.includes("token"))
+    );
+
+  // FAST-PATH: If the request has no auth cookies at all, the user is definitely unauthenticated.
+  // 1. If targeting a protected route, immediately redirect to login without making an external network call to Supabase.
+  // 2. If targeting a public route or API, pass through without calling Supabase over the network.
+  if (!hasAuthCookie) {
+    if (isAdminRoute) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/admin/login";
+      url.searchParams.set("callbackUrl", request.nextUrl.pathname);
+      return NextResponse.redirect(url);
+    }
+
+    if (isStudentRoute) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("callbackUrl", request.nextUrl.pathname);
+      return NextResponse.redirect(url);
+    }
+
+    // Public route with no session: return immediately
+    return supabaseResponse;
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey =
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
@@ -50,10 +95,7 @@ export async function updateSession(request: NextRequest) {
   const isStudent = userEmail.endsWith("@mite.ac.in");
 
   // 1. Protect /admin routes (excluding /admin/login)
-  if (
-    request.nextUrl.pathname.startsWith("/admin") &&
-    !request.nextUrl.pathname.startsWith("/admin/login")
-  ) {
+  if (isAdminRoute) {
     if (!user) {
       const url = request.nextUrl.clone();
       url.pathname = "/admin/login";
@@ -78,15 +120,8 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
-  // 2. Protect /dashboard, /resume-analyzer, /mock-interview, /skill-gap, /dsa, and /job-applications (student portal)
-  if (
-    request.nextUrl.pathname.startsWith("/dashboard") ||
-    request.nextUrl.pathname.startsWith("/resume-analyzer") ||
-    request.nextUrl.pathname.startsWith("/mock-interview") ||
-    request.nextUrl.pathname.startsWith("/skill-gap") ||
-    request.nextUrl.pathname.startsWith("/dsa") ||
-    request.nextUrl.pathname.startsWith("/job-applications")
-  ) {
+  // 2. Protect student portal routes
+  if (isStudentRoute) {
     if (!user) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";

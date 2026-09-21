@@ -42,13 +42,17 @@ export interface PlacementRoadmap {
 
 interface RoadmapClientProps {
   initialTargetRole: string;
+  initialRoadmap?: PlacementRoadmap | null;
 }
 
 export default function RoadmapClient({
   initialTargetRole,
+  initialRoadmap,
 }: RoadmapClientProps) {
-  const [roadmap, setRoadmap] = useState<PlacementRoadmap | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [roadmap, setRoadmap] = useState<PlacementRoadmap | null>(
+    initialRoadmap !== undefined ? initialRoadmap : null
+  );
+  const [isLoading, setIsLoading] = useState(initialRoadmap === undefined);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isRegenerateModalOpen, setIsRegenerateModalOpen] = useState(false);
   const [updatingTaskIds, setUpdatingTaskIds] = useState<Set<string>>(new Set());
@@ -69,7 +73,7 @@ export default function RoadmapClient({
     return () => clearTimeout(timer);
   }, [toast]);
 
-  // Fetch current roadmap on mount
+  // Fetch current roadmap on mount (fallback if not server-provided)
   const fetchRoadmap = async () => {
     setIsLoading(true);
     setError(null);
@@ -93,8 +97,10 @@ export default function RoadmapClient({
   };
 
   useEffect(() => {
-    fetchRoadmap();
-  }, []);
+    if (initialRoadmap === undefined) {
+      fetchRoadmap();
+    }
+  }, [initialRoadmap]);
 
   // Generate new roadmap (initial or regenerate)
   const handleGenerateRoadmap = async () => {

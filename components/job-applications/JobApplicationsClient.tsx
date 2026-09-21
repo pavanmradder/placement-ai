@@ -45,6 +45,7 @@ export interface JobApplication {
 
 interface JobApplicationsClientProps {
   userId: string;
+  initialApplications?: JobApplication[];
 }
 
 const STATUS_CONFIG: Record<
@@ -78,9 +79,14 @@ const STATUS_CONFIG: Record<
   },
 };
 
-export default function JobApplicationsClient({ userId }: JobApplicationsClientProps) {
-  const [applications, setApplications] = useState<JobApplication[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export default function JobApplicationsClient({
+  userId,
+  initialApplications,
+}: JobApplicationsClientProps) {
+  const [applications, setApplications] = useState<JobApplication[]>(
+    initialApplications || []
+  );
+  const [isLoading, setIsLoading] = useState(!initialApplications);
   const [error, setError] = useState<string | null>(null);
 
   // Filters & Search
@@ -118,8 +124,10 @@ export default function JobApplicationsClient({ userId }: JobApplicationsClientP
   };
 
   useEffect(() => {
-    fetchApplications();
-  }, []);
+    if (!initialApplications) {
+      fetchApplications();
+    }
+  }, [initialApplications]);
 
   // Dismiss toast after 3 seconds
   useEffect(() => {
