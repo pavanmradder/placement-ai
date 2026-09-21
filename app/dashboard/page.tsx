@@ -14,6 +14,7 @@ import {
   Target,
   GraduationCap,
   Award,
+  Briefcase,
 } from "lucide-react";
 
 export const metadata = {
@@ -558,6 +559,30 @@ export default async function DashboardPage() {
               </div>
               <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-purple-300 font-medium">
                 <span>View Problems</span>
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            </Link>
+
+            <Link
+              href="/job-applications"
+              className="p-5 rounded-2xl bg-[#0c1222]/80 border border-white/10 hover:border-amber-500/40 hover:bg-[#0e162c] transition-all group flex flex-col justify-between cursor-pointer"
+            >
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-3 group-hover:scale-105 transition-transform">
+                  <Briefcase className="w-5 h-5" />
+                </div>
+                <h3 className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Job Application Tracker</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300">
+                    Step 6 Live
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-400 mt-1">
+                  Track every campus and off-campus application from submission to offer stage.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-amber-300 font-medium">
+                <span>Manage Applications</span>
                 <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </div>
             </Link>

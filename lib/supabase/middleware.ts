@@ -78,13 +78,14 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
-  // 2. Protect /dashboard, /resume-analyzer, /mock-interview, /skill-gap, and /dsa (student portal)
+  // 2. Protect /dashboard, /resume-analyzer, /mock-interview, /skill-gap, /dsa, and /job-applications (student portal)
   if (
     request.nextUrl.pathname.startsWith("/dashboard") ||
     request.nextUrl.pathname.startsWith("/resume-analyzer") ||
     request.nextUrl.pathname.startsWith("/mock-interview") ||
     request.nextUrl.pathname.startsWith("/skill-gap") ||
-    request.nextUrl.pathname.startsWith("/dsa")
+    request.nextUrl.pathname.startsWith("/dsa") ||
+    request.nextUrl.pathname.startsWith("/job-applications")
   ) {
     if (!user) {
       const url = request.nextUrl.clone();

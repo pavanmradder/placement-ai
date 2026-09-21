@@ -362,6 +362,60 @@ export interface Database {
           },
         ];
       };
+      job_applications: {
+        Row: {
+          id: string;
+          user_id: string;
+          company_name: string;
+          job_title: string;
+          application_date: string;
+          status: "applied" | "oa" | "interview" | "offer" | "rejected" | string;
+          job_url: string | null;
+          location: string | null;
+          package_ctc: string | null;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          company_name: string;
+          job_title: string;
+          application_date?: string;
+          status?: "applied" | "oa" | "interview" | "offer" | "rejected" | string;
+          job_url?: string | null;
+          location?: string | null;
+          package_ctc?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          company_name?: string;
+          job_title?: string;
+          application_date?: string;
+          status?: "applied" | "oa" | "interview" | "offer" | "rejected" | string;
+          job_url?: string | null;
+          location?: string | null;
+          package_ctc?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "job_applications_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedSchema: "auth";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
