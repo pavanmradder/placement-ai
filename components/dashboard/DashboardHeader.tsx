@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useAuth } from "@/components/providers/AuthProvider";
-import { Bot, LogOut, Home, LayoutDashboard, FileText, Video, Target, Code2, Briefcase } from "lucide-react";
+import { Bot, LogOut, Home, LayoutDashboard, FileText, Video, Target, Code2, Briefcase, Compass } from "lucide-react";
 
 interface DashboardHeaderProps {
   displayName: string;
@@ -90,6 +90,14 @@ export default function DashboardHeader({
           >
             <Briefcase className="w-3.5 h-3.5 text-amber-400" />
             <span>Applications</span>
+          </Link>
+
+          <Link
+            href="/roadmap"
+            className="hidden md:flex items-center gap-1.5 text-xs text-slate-400 hover:text-cyan-300 px-3 py-2 rounded-lg hover:bg-white/[0.05] transition-colors"
+          >
+            <Compass className="w-3.5 h-3.5 text-indigo-400" />
+            <span>Roadmap</span>
           </Link>
 
           <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs">

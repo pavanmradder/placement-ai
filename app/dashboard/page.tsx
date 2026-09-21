@@ -15,6 +15,7 @@ import {
   GraduationCap,
   Award,
   Briefcase,
+  Compass,
 } from "lucide-react";
 
 export const metadata = {
@@ -583,6 +584,30 @@ export default async function DashboardPage() {
               </div>
               <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-amber-300 font-medium">
                 <span>Manage Applications</span>
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            </Link>
+
+            <Link
+              href="/roadmap"
+              className="p-5 rounded-2xl bg-[#0c1222]/80 border border-white/10 hover:border-indigo-500/40 hover:bg-[#0e162c] transition-all group flex flex-col justify-between cursor-pointer"
+            >
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-3 group-hover:scale-105 transition-transform">
+                  <Compass className="w-5 h-5" />
+                </div>
+                <h3 className="text-sm font-semibold text-white group-hover:text-indigo-300 transition-colors flex items-center justify-between">
+                  <span>Personalized Roadmap</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300">
+                    Step 7 Live
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-400 mt-1">
+                  AI-generated multi-week preparation roadmap tailored to your target role, skill gaps, and DSA progress.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-indigo-300 font-medium">
+                <span>View Roadmap</span>
                 <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </div>
             </Link>

@@ -416,6 +416,57 @@ export interface Database {
           },
         ];
       };
+      placement_roadmaps: {
+        Row: {
+          id: string;
+          user_id: string;
+          target_role: string;
+          title: string;
+          description: string | null;
+          duration_weeks: number;
+          roadmap_data: Json;
+          overall_progress: number;
+          status: "active" | "completed" | "archived" | string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          target_role: string;
+          title: string;
+          description?: string | null;
+          duration_weeks?: number;
+          roadmap_data?: Json;
+          overall_progress?: number;
+          status?: "active" | "completed" | "archived" | string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          target_role?: string;
+          title?: string;
+          description?: string | null;
+          duration_weeks?: number;
+          roadmap_data?: Json;
+          overall_progress?: number;
+          status?: "active" | "completed" | "archived" | string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "placement_roadmaps_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedSchema: "auth";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
