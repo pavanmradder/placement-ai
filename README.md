@@ -63,41 +63,41 @@ PlacementAI is engineered on the **Next.js App Router** with React Server Compon
 
 ```mermaid
 flowchart TD
-    subgraph Client [Browser Client]
-        UI[Student / Admin Browser]
+    subgraph Client ["Browser Client"]
+        UI["Student / Admin Browser"]
     end
 
-    subgraph Edge [Next.js Edge / Middleware]
-        MW[proxy.ts / middleware.ts]
-        FastPath{Has Auth Cookie?}
+    subgraph Edge ["Next.js Edge / Middleware"]
+        MW["proxy.ts / middleware.ts"]
+        FastPath{"Has Auth Cookie?"}
     end
 
-    subgraph AppRouter [Next.js App Router]
-        Layout[app/(student)/layout.tsx]
-        Pages[Server Components: /dashboard, /dsa, etc.]
-        APIs[Route Handlers: /api/*]
+    subgraph AppRouter ["Next.js App Router"]
+        Layout["app/(student)/layout.tsx"]
+        Pages["Server Components: /dashboard, /dsa, etc."]
+        APIs["Route Handlers: /api/*"]
     end
 
-    subgraph Backend [Supabase Services]
-        Auth[Supabase Auth]
-        DB[(PostgreSQL with RLS)]
-        Storage[Private Storage: resumes]
+    subgraph Backend ["Supabase Services"]
+        Auth["Supabase Auth"]
+        DB[("PostgreSQL with RLS")]
+        Storage["Private Storage: resumes"]
     end
 
-    subgraph AI [Groq Cloud]
-        LLM[openai/gpt-oss-120b]
+    subgraph AI ["Groq Cloud"]
+        LLM["openai/gpt-oss-120b"]
     end
 
     UI -->|Request| MW
     MW --> FastPath
-    FastPath -->|No Cookie & Protected| UI
-    FastPath -->|Has Cookie| Auth
-    MW -->|Authorized Request| Layout
-    Layout -->|Single Profile Fetch| Pages
-    Pages -->|Parallel Promise.all| DB
-    APIs -->|Derive user.id from session| DB
-    APIs -->|Upload / Signed URL| Storage
-    APIs -->|Server-Side Prompt & Evaluation| LLM
+    FastPath -->|"No Cookie & Protected"| UI
+    FastPath -->|"Has Cookie"| Auth
+    MW -->|"Authorized Request"| Layout
+    Layout -->|"Single Profile Fetch"| Pages
+    Pages -->|"Parallel Promise.all"| DB
+    APIs -->|"Derive user.id from session"| DB
+    APIs -->|"Upload / Signed URL"| Storage
+    APIs -->|"Server-Side Prompt & Evaluation"| LLM
 ```
 
 ### Performance Optimizations
