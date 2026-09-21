@@ -340,12 +340,15 @@ export default async function DashboardPage() {
           </div>
 
           {/* Metric 3: DSA Progress */}
-          <div className="p-6 rounded-2xl bg-[#0c1222]/90 border border-white/10 hover:border-purple-500/40 transition-all">
+          <Link
+            href="/dsa"
+            className="block p-6 rounded-2xl bg-[#0c1222]/90 border border-white/10 hover:border-purple-500/40 hover:bg-[#0e162c] transition-all group cursor-pointer"
+          >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-purple-300">
+              <span className="text-xs font-semibold uppercase tracking-wider text-purple-300 group-hover:text-purple-200 transition-colors">
                 Coding Mastery
               </span>
-              <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
+              <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 group-hover:scale-105 transition-transform">
                 <Code2 className="w-4 h-4" />
               </div>
             </div>
@@ -376,11 +379,12 @@ export default async function DashboardPage() {
                   ? `E: ${easySolved} • M: ${mediumSolved} • H: ${hardSolved}`
                   : "Target: 150 Problems"}
               </span>
-              <span className="text-purple-300 font-medium">
-                {hasDsaData ? `${dsaProgressPercent}% Target` : "Not logged"}
+              <span className="text-purple-400 group-hover:text-purple-300 font-medium flex items-center gap-1 underline underline-offset-2 group-hover:no-underline">
+                <span>{hasDsaData ? "Track DSA" : "Start DSA"}</span>
+                <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </span>
             </div>
-          </div>
+          </Link>
 
           {/* Metric 4: Mock Interview Progress */}
           <div className="p-6 rounded-2xl bg-[#0c1222]/90 border border-white/10 hover:border-emerald-500/40 transition-all">
@@ -534,13 +538,19 @@ export default async function DashboardPage() {
               </div>
             </Link>
 
-            <div className="p-5 rounded-2xl bg-[#0c1222]/80 border border-white/10 hover:border-purple-500/30 transition-all group flex flex-col justify-between">
+            <Link
+              href="/dsa"
+              className="p-5 rounded-2xl bg-[#0c1222]/80 border border-white/10 hover:border-purple-500/40 hover:bg-[#0e162c] transition-all group flex flex-col justify-between cursor-pointer"
+            >
               <div>
                 <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-3 group-hover:scale-105 transition-transform">
                   <Code2 className="w-5 h-5" />
                 </div>
-                <h3 className="text-sm font-semibold text-white group-hover:text-purple-300 transition-colors">
-                  DSA Tracker & Blind 75
+                <h3 className="text-sm font-semibold text-white group-hover:text-purple-300 transition-colors flex items-center justify-between">
+                  <span>DSA Tracker & Blind 75</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300">
+                    Step 5 Live
+                  </span>
                 </h3>
                 <p className="text-xs text-slate-400 mt-1">
                   Step-by-step problem sets curated specifically for campus recruitment coding rounds.
@@ -550,7 +560,7 @@ export default async function DashboardPage() {
                 <span>View Problems</span>
                 <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </div>
-            </div>
+            </Link>
 
             <div className="p-5 rounded-2xl bg-[#0c1222]/80 border border-white/10 hover:border-emerald-500/30 transition-all group flex flex-col justify-between">
               <div>

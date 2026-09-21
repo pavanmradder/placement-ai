@@ -78,12 +78,13 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
-  // 2. Protect /dashboard, /resume-analyzer, /mock-interview, and /skill-gap (student portal)
+  // 2. Protect /dashboard, /resume-analyzer, /mock-interview, /skill-gap, and /dsa (student portal)
   if (
     request.nextUrl.pathname.startsWith("/dashboard") ||
     request.nextUrl.pathname.startsWith("/resume-analyzer") ||
     request.nextUrl.pathname.startsWith("/mock-interview") ||
-    request.nextUrl.pathname.startsWith("/skill-gap")
+    request.nextUrl.pathname.startsWith("/skill-gap") ||
+    request.nextUrl.pathname.startsWith("/dsa")
   ) {
     if (!user) {
       const url = request.nextUrl.clone();
@@ -97,7 +98,7 @@ export async function updateSession(request: NextRequest) {
     }
 
     // If admin navigates to /dashboard, redirect to /admin
-    if (isAdmin) {
+    if (isAdmin && request.nextUrl.pathname.startsWith("/dashboard")) {
       const url = request.nextUrl.clone();
       url.pathname = "/admin";
       const redirectResponse = NextResponse.redirect(url);
@@ -107,8 +108,8 @@ export async function updateSession(request: NextRequest) {
       return redirectResponse;
     }
 
-    // If non-MITE email somehow has an active session, redirect to login
-    if (!isStudent) {
+    // If non-MITE email and non-admin somehow has an active session, redirect to login
+    if (!isStudent && !isAdmin) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
       url.searchParams.set("error", "domain");
