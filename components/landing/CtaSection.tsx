@@ -28,7 +28,7 @@ export default function CtaSection() {
           </h2>
 
           <p className="relative z-10 mt-6 text-base sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Join thousands of engineering students who are practicing with AI, closing skill gaps, and walking into campus recruitment drives with total confidence.
+            Build your placement readiness with AI-powered tools designed for engineering students — from resume analysis to realistic mock interviews.
           </p>
 
           {/* Action buttons */}
@@ -53,15 +53,15 @@ export default function CtaSection() {
           <div className="relative z-10 mt-10 pt-8 border-t border-white/[0.08] flex flex-wrap items-center justify-center gap-y-3 gap-x-8 text-xs sm:text-sm text-slate-400">
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <span>Instant AI Diagnostic</span>
+              <span>6 Integrated Tools</span>
             </div>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-cyan-400" />
-              <span>No Credit Card Required</span>
+              <span>Personalized AI Roadmaps</span>
             </div>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-indigo-400" />
-              <span>Free Campus Starter Plan</span>
+              <span>Free Student Workspace</span>
             </div>
           </div>
 

@@ -1,19 +1,19 @@
 import {
   Sparkles,
-  Users,
-  Award,
-  GraduationCap,
   ShieldCheck,
   Building2,
-  TrendingUp,
+  Briefcase,
+  Bot,
+  Compass,
+  Lock,
 } from "lucide-react";
 
 export default function AboutSection() {
-  const stats = [
-    { label: "Engineering Students", value: "10,000+", icon: Users },
-    { label: "Partner Colleges & Clubs", value: "120+", icon: GraduationCap },
-    { label: "Avg Placement Package", value: "14.2 LPA", icon: TrendingUp },
-    { label: "OA Shortlist Success Rate", value: "88%", icon: Award },
+  const capabilities = [
+    { label: "Placement Modules", value: "6", sublabel: "Integrated Tools", icon: Briefcase },
+    { label: "AI Guidance", value: "Groq", sublabel: "Fast LLM Analysis", icon: Bot },
+    { label: "Tailored Roadmaps", value: "Custom", sublabel: "Role-Specific Plans", icon: Compass },
+    { label: "Data Security", value: "RLS", sublabel: "Row-Level Security", icon: ShieldCheck },
   ];
 
   return (
@@ -29,24 +29,24 @@ export default function AboutSection() {
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
-              Democratizing Tier-1 Placement Mentorship for Every Student
+              Democratizing Placement Preparation for Every Student
             </h2>
 
             <p className="text-base sm:text-lg text-slate-300 leading-relaxed">
-              Campus placements are often high-stress and unequal. While Tier-1 college students get direct senior guidance and company insider tips, millions of bright engineering students are left guessing what interviewers look for.
+              Campus placements can be overwhelming and unequal. While some students have direct senior guidance and company insider tips, many engineering students are left wondering what technical recruiters look for.
             </p>
 
             <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-              <strong>PlacementAI</strong> bridges this gap by providing an intelligent, personalized preparation ecosystem. From ATS-scoring your resume to conducting rigorous mock technical rounds, we act as your 24/7 placement mentor until you sign your dream offer letter.
+              <strong>PlacementAI</strong> bridges this gap by providing an intelligent, personalized preparation ecosystem. From ATS-scoring your resume to conducting adaptive mock technical rounds, we provide the tools you need to build competence and confidence for campus recruitment.
             </p>
 
             <div className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
                 <ShieldCheck className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-sm font-semibold text-white">No Gatekeeping</h4>
+                  <h4 className="text-sm font-semibold text-white">Equal Opportunity</h4>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Equal access to FAANG-grade question banks and feedback.
+                    Equal access to curated problem sets, interview drills, and diagnostic feedback.
                   </p>
                 </div>
               </div>
@@ -54,19 +54,19 @@ export default function AboutSection() {
               <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
                 <Building2 className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-sm font-semibold text-white">Company-Specific</h4>
+                  <h4 className="text-sm font-semibold text-white">Role-Focused</h4>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Updated patterns from real 2024-2025 hiring tests.
+                    Targeted preparation for technical and HR campus recruitment rounds.
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Stats Showcase Grid */}
+          {/* Product Capabilities Grid */}
           <div className="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6">
-            {stats.map((stat, idx) => {
-              const Icon = stat.icon;
+            {capabilities.map((item, idx) => {
+              const Icon = item.icon;
               return (
                 <div
                   key={idx}
@@ -77,10 +77,13 @@ export default function AboutSection() {
                   </div>
                   <div className="mt-6">
                     <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                      {stat.value}
+                      {item.value}
                     </div>
-                    <div className="text-xs sm:text-sm font-medium text-slate-400 mt-1">
-                      {stat.label}
+                    <div className="text-sm font-semibold text-slate-200 mt-1">
+                      {item.label}
+                    </div>
+                    <div className="text-xs text-slate-400 mt-0.5">
+                      {item.sublabel}
                     </div>
                   </div>
                 </div>

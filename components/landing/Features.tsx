@@ -18,7 +18,7 @@ export default function Features() {
         "Score your resume against ATS algorithms used by top tech companies. Get instant feedback on keywords, impact metrics, and project descriptions.",
       icon: FileCheck2,
       accentGradient: "bg-gradient-to-tr from-blue-500 to-cyan-400",
-      badge: "98% ATS Accuracy",
+      badge: "ATS Scoring",
       tag: "ATS Optimization",
       perks: [
         "Keyword gap identification",
@@ -33,7 +33,7 @@ export default function Features() {
         "Simulate live technical and HR interviews with an AI interviewer. Receive thorough feedback on conceptual clarity, problem-solving, and communication.",
       icon: Bot,
       accentGradient: "bg-gradient-to-tr from-indigo-500 to-purple-400",
-      badge: "Real-time Voice & Text",
+      badge: "Interactive Drills",
       tag: "Interactive Practice",
       perks: [
         "Coding & System Design rounds",
@@ -63,7 +63,7 @@ export default function Features() {
         "Organize your problem-solving journey across curated sheets (Striver, NeetCode, Blind 75). Track topic mastery, patterns, and daily streaks.",
       icon: Code2,
       accentGradient: "bg-gradient-to-tr from-emerald-500 to-teal-400",
-      badge: "350+ Curated Problems",
+      badge: "Curated Problem Sets",
       tag: "Coding Mastery",
       perks: [
         "Topic-level progress charts",
@@ -123,7 +123,7 @@ export default function Features() {
             </span>
           </h2>
           <p className="mt-4 text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Eliminate the confusion and scatter. Six specialized modules working together to guarantee you excel in every round of campus placement.
+            Eliminate the confusion and scatter. Six integrated modules working together to help you prepare effectively for every round of campus recruitment.
           </p>
         </div>
 

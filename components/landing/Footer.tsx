@@ -22,7 +22,7 @@ export default function Footer() {
             </Link>
 
             <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
-              The AI-powered placement preparation ecosystem designed specifically for engineering students. Crack technical interviews, optimize your resume, and land top-tier campus offers.
+              The AI-powered placement preparation ecosystem designed specifically for engineering students. Practice technical interviews, analyze your resume, and track your placement readiness.
             </p>
 
             <div className="flex items-center gap-3 pt-2">
@@ -123,8 +123,8 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#about" className="hover:text-cyan-300 transition-colors">
-                  College Statistics
+                <a href="#features" className="hover:text-cyan-300 transition-colors">
+                  Features Overview
                 </a>
               </li>
               <li>
@@ -178,7 +178,7 @@ export default function Footer() {
 
         {/* Bottom copyright line */}
         <div className="mt-12 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} PlacementAI Inc. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} PlacementAI. All rights reserved.</p>
           <p className="flex items-center gap-1.5">
             <span>Crafted with passion for engineering students worldwide</span>
           </p>

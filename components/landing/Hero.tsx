@@ -41,9 +41,8 @@ export default function Hero() {
 
 
           <p className="text-base sm:text-lg lg:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal">
-            Prepare smarter, build the right skills, and become placement ready with AI-powered career tools.
+            Analyze your resume, practice AI mock interviews, identify skill gaps, track DSA progress, manage applications, and follow a personalized placement roadmap — all in one platform.
           </p>
-
 
           {/* Action Buttons */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -63,19 +62,19 @@ export default function Hero() {
             </a>
           </div>
 
-          {/* Social Proof Highlights */}
+          {/* Product Highlights */}
           <div className="pt-6 flex flex-wrap items-center justify-center gap-y-3 gap-x-8 text-xs text-slate-400">
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-cyan-400" />
-              <span>Tailored for CS, IT & Circuit Branches</span>
+              <span>6 Integrated Placement Modules</span>
             </div>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <span>Realistic FAANG & Tier-1 Question Banks</span>
+              <span>AI-Powered Interviews & Roadmaps</span>
             </div>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-indigo-400" />
-              <span>100% Free Campus Starter Tier</span>
+              <span>Private & Secure Student Storage</span>
             </div>
           </div>
         </div>

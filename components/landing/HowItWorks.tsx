@@ -44,7 +44,7 @@ export default function HowItWorks() {
       stepTitle: "Step 4: Track your progress",
       shortTitle: "Track your progress",
       description:
-        "Watch your Placement Readiness score climb past 80% and manage recruitment deadlines from application to final offer.",
+        "Track your placement readiness score as you complete drills, close skill gaps, and manage applications from submission to offer.",
       icon: LineChart,
       accentGradient: "bg-gradient-to-tr from-cyan-500 to-emerald-500",
       detail: "Daily actionable milestones tailored to drive dates.",
@@ -62,7 +62,7 @@ export default function HowItWorks() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-semibold uppercase tracking-wider mb-4">
-            Proven Placement Blueprint
+            Structured Preparation Journey
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
             How It Works
@@ -123,7 +123,7 @@ export default function HowItWorks() {
           <div className="flex items-center gap-3 text-center sm:text-left">
             <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse hidden sm:block" />
             <p className="text-sm text-slate-300">
-              Average student improves their placement readiness by <strong className="text-white font-semibold">28% within the first 14 days</strong>.
+              Build your placement readiness through a unified workflow combining <strong className="text-white font-semibold">resumes, coding, mock interviews, and personalized study roadmaps</strong>.
             </p>
           </div>
           <a
